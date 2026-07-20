@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#08080a" />
+  <title>لغز اليوم | تلميح</title>
+  <meta name="description" content="صفحة تلميح لغز اليوم — دقّق في الصورة واكتشف الشيء المخفي." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #08080a;
+      --bg-2: #101014;
+      --card: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.07);
+      --accent: #ff2a51;
+      --accent-2: #e61f42;
+      --accent-glow: rgba(255, 42, 81, 0.35);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.62);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { overflow-x: hidden; }
+
+    body {
+      font-family: 'Cairo', system-ui, 'Segoe UI', Tahoma, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(255,42,81,0.12), transparent 60%),
+        linear-gradient(180deg, var(--bg-2), var(--bg) 40%);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: clamp(16px, 5vw, 28px) clamp(14px, 4vw, 24px)
+               calc(clamp(20px, 6vw, 40px) + env(safe-area-inset-bottom, 0px));
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 4vw, 20px);
+    }
+
+    .header { text-align: center; }
+
+    .brush {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 8px 26px var(--accent-glow);
+      transform: rotate(-1.2deg);
+    }
+    .brush h1 {
+      font-size: clamp(22px, 7vw, 30px);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+    .brush .lens { font-size: clamp(20px, 6.5vw, 28px); line-height: 1; }
+
+    .subtitle {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: clamp(14px, 4.2vw, 16px);
+      font-weight: 600;
+      line-height: 1.7;
+    }
+
+    .figure {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 14px 40px rgba(0,0,0,0.55);
+      background: #000;
+      isolation: isolate;
+    }
+    .figure img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(0.55) brightness(0.62) contrast(1.08);
+      transform: scale(1);
+      transform-origin: center center;
+      transition: filter 0.45s ease, transform 0.45s ease;
+      cursor: zoom-in;
+      touch-action: pan-y;
+    }
+    .figure::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(120% 120% at 50% 45%, transparent 46%, rgba(0,0,0,0.72) 100%);
+      z-index: 2;
+      transition: opacity 0.45s ease;
+    }
+    .figure::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.16;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+      mix-blend-mode: overlay;
+      transition: opacity 0.45s ease;
+    }
+    .figure.inspect img { filter: grayscale(0) brightness(1.05) contrast(1.02); transform: scale(1.35); cursor: zoom-out; }
+    .figure.inspect::after { opacity: 0; }
+    .figure.inspect::before { opacity: 0; }
+
+    .figure .badge {
+      position: absolute;
+      top: 10px;
+      inset-inline-start: 10px;
+      z-index: 4;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid var(--card-border);
+      padding: 5px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .btn {
+      -webkit-appearance: none;
+      appearance: none;
+      border: none;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+      font-size: clamp(14px, 4.2vw, 16px);
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.12s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .btn:active { transform: translateY(1px) scale(0.995); }
+    .btn-accent {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 8px 24px var(--accent-glow);
+    }
+    .btn-ghost {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+    }
+
+    .riddle {
+      text-align: center;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .riddle p { font-size: clamp(15px, 4.4vw, 17px); font-weight: 700; line-height: 1.8; }
+    .riddle .q { color: var(--accent); margin-top: 6px; }
+
+    .hints { display: flex; flex-direction: column; gap: 10px; }
+    .hints .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .hint {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .hint > button {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: clamp(14px, 4.1vw, 15px);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+    }
+    .hint > button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .hint > button .chev { transition: transform 0.3s ease; color: var(--accent); font-weight: 900; }
+    .hint.open > button .chev { transform: rotate(90deg); }
+    .hint .body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.35s ease, padding 0.35s ease;
+      padding: 0 16px;
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.9;
+      font-size: clamp(13px, 4vw, 15px);
+    }
+    .hint.open .body { max-height: 240px; opacity: 1; padding: 0 16px 16px; }
+    .hint .lock { font-size: 12px; color: var(--muted); font-weight: 700; }
+
+    .howto {
+      text-align: center;
+      background: linear-gradient(135deg, rgba(255,42,81,0.12), rgba(255,42,81,0.04));
+      border: 1px solid rgba(255,42,81,0.28);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      font-weight: 700;
+      line-height: 1.8;
+      font-size: clamp(14px, 4.2vw, 16px);
+    }
+    .howto .tag {
+      display: inline-block;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 3px 10px;
+      margin: 0 3px;
+      color: var(--accent);
+    }
+
+    .reward {
+      text-align: center;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: clamp(13px, 4vw, 15px);
+      line-height: 1.7;
+    }
+    .reward b { color: var(--text); }
+    .footer-note {
+      text-align: center;
+      color: rgba(255,255,255,0.35);
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="header">
+      <div class="brush">
+        <span class="lens">🔍</span>
+        <h1>لغز اليوم</h1>
+      </div>
+      <p class="subtitle">شيء موجود في الصورة وواضح، بس ما أحد ينتبه له!</p>
+    </header>
+
+    <div class="figure" id="figure">
+      <span class="badge">اضغط للتدقيق 🔍</span>
+      <img id="puzzleImg" src="assets/puzzle.png" alt="صورة اللغز" loading="eager" decoding="async" />
+    </div>
+    <button class="btn btn-ghost" id="inspectBtn" type="button">🔍 دقّق في الصورة</button>
+
+    <section class="riddle">
+      <p>ركّز جيدًا في تفاصيل الغرفة…</p>
+      <p class="q">ما هو هذا الشيء؟</p>
+    </section>
+
+    <section class="hints">
+      <div class="section-title">التلميحات — اكشفها بالترتيب عند الحاجة</div>
+
+      <div class="hint" data-index="0">
+        <button type="button">
+          <span>💡 تلميح 1</span>
+          <span class="chev">›</span>
+        </button>
+        <div class="body">
+          يُروى أنّ عملاقًا كان يقف في الغرفة، حسِبه الزوّار تمثالًا، وكان يخطّ المصائر بنهرٍ أسود… ثم جفّ نهره وغاب من خلف السرير.
+        </div>
+      </div>
+
+      <div class="hint" data-index="1">
+        <button type="button" disabled>
+          <span>💡 تلميح 2</span>
+          <span class="lock">🔒 اكشف الأول</span>
+        </button>
+        <div class="body">
+          لم يكن تمثالًا كما ظنّوه، بل أداةٌ يخطّ بها البشرُ مصائرهم على الورق. «نهره الأسود» ليس ماءً… إنه ما يسيل حين تكتب.
+        </div>
+      </div>
+
+      <div class="hint" data-index="2">
+        <button type="button" disabled>
+          <span>💡 تلميح 3</span>
+          <span class="lock">🔒 اكشف الثاني</span>
+        </button>
+        <div class="body">
+          شيءٌ رفيعٌ طويل، كان يقف حارسًا خلف السرير في أوّل البثوث ثم غاب. نهره الأسود هو الذي يكتب به الناسُ حروفهم… ما اسمه بحرفين أو ثلاثة؟
+        </div>
+      </div>
+    </section>
+
+    <section class="howto">
+      عرفت الجواب؟ ارجع إلى ديسكورد واضغط زر
+      <span class="tag">أجب على اللغز</span>
+      واكتب إجابتك.
+    </section>
+
+    <p class="reward">أجب بشكل صحيح واكسب <b>1000 أرينا بوينت</b> 🎁</p>
+    <p class="footer-note">SHoNg × BoNg — لغز اليوم</p>
+  </main>
+
+  <script>
+    (function () {
+      var figure = document.getElementById('figure');
+      var img = document.getElementById('puzzleImg');
+      var inspectBtn = document.getElementById('inspectBtn');
+      var badge = figure.querySelector('.badge');
+
+      function toggleInspect() {
+        var on = figure.classList.toggle('inspect');
+        inspectBtn.textContent = on ? '↩︎ إعادة التعتيم' : '🔍 دقّق في الصورة';
+        badge.textContent = on ? 'وضع التدقيق ✓' : 'اضغط للتدقيق 🔍';
+      }
+      img.addEventListener('click', toggleInspect);
+      inspectBtn.addEventListener('click', toggleInspect);
+
+      function moveFocus(clientX, clientY) {
+        if (!figure.classList.contains('inspect')) return;
+        var r = figure.getBoundingClientRect();
+        var x = ((clientX - r.left) / r.width) * 100;
+        var y = ((clientY - r.top) / r.height) * 100;
+        x = Math.max(0, Math.min(100, x));
+        y = Math.max(0, Math.min(100, y));
+        img.style.transformOrigin = x + '% ' + y + '%';
+      }
+      figure.addEventListener('mousemove', function (e) { moveFocus(e.clientX, e.clientY); });
+      figure.addEventListener('touchmove', function (e) {
+        if (e.touches && e.touches[0]) moveFocus(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+    })();
+
+    (function () {
+      var hints = Array.prototype.slice.call(document.querySelectorAll('.hint'));
+      hints.forEach(function (hint, i) {
+        var btn = hint.querySelector('button');
+        btn.addEventListener('click', function () {
+          if (btn.disabled) return;
+          hint.classList.toggle('open');
+          var next = hints[i + 1];
+          if (next && hint.classList.contains('open')) {
+            var nextBtn = next.querySelector('button');
+            if (nextBtn.disabled) {
+              nextBtn.disabled = false;
+              var lock = nextBtn.querySelector('.lock');
+              if (lock) {
+                lock.classList.remove('lock');
+                lock.className = 'chev';
+                lock.textContent = '›';
+              }
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
